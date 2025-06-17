@@ -77,10 +77,28 @@ H2O") { verticalAlignment(DslSpanBuilder.VerticalAlignment.Superscript) }
 | `DslSpannableStringBuildImpl` | 富文本构建的具体实现类                    |
 
 ## 扩展开发
-如需新增自定义Span类型（如添加阴影效果）：
+如需新增自定义Span类型（如添加阴影效果），支持两种方式：
+### 方式一：通过新增方法扩展
 1. 在`DslSpanBuilder`接口中添加新方法（如`shadow(radius: Float, dx: Float, dy: Float, color: Int)`）
 2. 在`DslSpanBuilderImpl`中实现该方法，将`ShadowSpan`添加到Span集合
 3. 在业务代码中通过DSL调用新方法
+
+### 方式二：直接使用`customSpan`方法
+1. 创建自定义Span类（如`DynamicColorSpan`）并实现所需逻辑
+2. 在业务代码中通过`customSpan(span)`方法直接传入自定义Span实例
+
+示例：
+```kotlin
+// 自定义Span类
+class DynamicColorSpan(private val colors: List<Int>) : CharacterStyle() {
+    override fun updateDrawState(tp: TextPaint) {
+        tp.color = colors.random() // 示例：随机切换颜色
+    }
+}
+
+// 使用customSpan调用
+addText("\n动态颜色文本") { customSpan(DynamicColorSpan(listOf(0xFFFF0000.toInt(), 0xFF00FF00.toInt()))) }
+```
 
 ## 贡献
 欢迎提交Issue反馈问题或提交PR参与开发：
