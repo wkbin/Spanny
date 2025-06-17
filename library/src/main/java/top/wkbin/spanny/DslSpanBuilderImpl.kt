@@ -1,7 +1,8 @@
+package top.wkbin.spanny
+
 import android.graphics.Typeface
 import android.text.style.*
 import android.view.View
-import top.wkbin.spanny.DslSpanBuilder
 
 class DslSpanBuilderImpl : DslSpanBuilder {
     // 使用集合存储所有生成的 Span 对象

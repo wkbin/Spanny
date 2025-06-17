@@ -3,7 +3,6 @@ package top.wkbin.spanny
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
-import com.ideaflow.zmcy.dsl.text.DslSpannableStringBuildImpl
 
 fun TextView.buildDslSpannableString(init: DslSpannableStringBuilder.() -> Unit) {
     // 具体实现类

@@ -1,14 +1,11 @@
-package com.ideaflow.zmcy.dsl.text
+package top.wkbin.spanny
 
-import DslSpanBuilderImpl
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import top.wkbin.spanny.DslSpanBuilder
-import top.wkbin.spanny.DslSpannableStringBuilder
 
 class DslSpannableStringBuildImpl(val builder: SpannableStringBuilder) : DslSpannableStringBuilder {
 
