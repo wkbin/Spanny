@@ -10,7 +10,7 @@
 *注：图片展示了包含不同字体大小、颜色、样式（粗体/斜体）、下划线、删除线、自定义字体、可点击文本及插入图片的综合效果*
 
 ## 功能特性
-- **丰富的样式支持**：字体颜色、背景色、粗体、斜体、下划线、删除线、自定义字体、字体大小
+- **丰富的样式支持**：字体颜色、背景色、粗体、斜体、下划线、删除线、自定义字体、字体大小、相对大小、文字阴影、上标/下标
 
 ## API 参考
 以下是`DslSpanBuilder`接口支持的核心方法：
@@ -26,6 +26,10 @@
 | `underline()`            | 无                                                                       | 添加下划线                                 |
 | `strikethrough()`        | 无                                                                       | 添加删除线                                 |
 | `fontFamily(typeface: Typeface)` | `typeface`: 自定义字体（通过`ResourcesCompat.getFont`加载）              | 应用自定义字体（需提前将字体文件放入`res/font`目录） |
+| `relativeSize(ratio: Float)` | `ratio`: 相对默认大小的比例（如1.5表示1.5倍）                             | 设置相对字体大小                           |
+| `shadow(radius: Float, dx: Float, dy: Float, @ColorInt color)` | `radius`: 阴影半径, `dx`: 水平偏移, `dy`: 垂直偏移, `color`: 阴影颜色     | 设置文字阴影效果                           |
+| `verticalAlignment(alignment: VerticalAlignment)` | `alignment`: 对齐方式（Normal/Superscript/Subscript）                    | 设置文字上标/下标                          |
+| `clickHighlightColor(@ColorInt color)` | `color`: 点击高亮颜色值                                                  | 设置点击事件背景高亮颜色                   |
 - **交互能力**：支持文本区域点击事件（点击后触发Toast或自定义逻辑）
 - **图片插入**：支持通过资源ID或Bitmap插入图片到文本中
 - **DSL链式调用**：通过简洁的Kotlin DSL语法构建富文本，代码可读性强
@@ -51,7 +55,14 @@ findViewById<TextView>(R.id.tv_demo).buildDslSpannableString {
     val customTypeface = ResourcesCompat.getFont(this@MainActivity, R.font.sansita_extra_bold_italic)
     addText("\n20sp红色背景自定义字体") { fontFamily(customTypeface!!).textSize(20).backgroundColor(0xFFE91E63.toInt()) }
     // 可点击文本
-    addText("\n可点击文本") { click { showToast("点击事件触发") } }
+    addText("
+可点击文本") { click { showToast("点击事件触发") }.clickHighlightColor(0xFFFFEB3B.toInt()) } 
+    // 阴影效果
+    addText("
+带阴影的文字") { shadow(2f, 1f, 1f, 0xFF607D8B.toInt()) } 
+    // 上标示例
+    addText("
+H2O") { verticalAlignment(DslSpanBuilder.VerticalAlignment.Superscript) }
     // 插入图片
     addImage(this@MainActivity, R.mipmap.ic_launcher)
 }
