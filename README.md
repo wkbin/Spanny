@@ -2,8 +2,30 @@
 
 一个基于Kotlin DSL的Android富文本构建库，支持通过链式调用快速构建包含样式、交互和图片的复杂文本内容。
 
+## 效果预览
+
+以下是使用本库构建的富文本示例效果（实际效果以运行时为准）：
+
+![富文本效果预览](docs/1.jpg)
+*注：图片展示了包含不同字体大小、颜色、样式（粗体/斜体）、下划线、删除线、自定义字体、可点击文本及插入图片的综合效果*
+
 ## 功能特性
 - **丰富的样式支持**：字体颜色、背景色、粗体、斜体、下划线、删除线、自定义字体、字体大小
+
+## API 参考
+以下是`DslSpanBuilder`接口支持的核心方法：
+
+| 方法名                  | 参数说明                                                                 | 功能描述                                   |
+|-------------------------|--------------------------------------------------------------------------|-------------------------------------------|
+| `textColor(@ColorInt color)` | `color`: 颜色值（支持`0xFFE91E63`格式或`"#00FF00".toColorInt()`转换） | 设置字体前景色                             |
+| `backgroundColor(@ColorInt color)` | `color`: 颜色值                                                          | 设置字体背景色                             |
+| `textSize(size: Int)`     | `size`: 字体大小（单位：sp）                                              | 设置字体大小                               |
+| `click(block: (View) -> Unit)` | `block`: 点击事件回调（接收点击的View参数）                              | 设置可点击文本的点击事件                   |
+| `bold()`                 | 无                                                                       | 应用粗体样式                               |
+| `italic()`               | 无                                                                       | 应用斜体样式                               |
+| `underline()`            | 无                                                                       | 添加下划线                                 |
+| `strikethrough()`        | 无                                                                       | 添加删除线                                 |
+| `fontFamily(typeface: Typeface)` | `typeface`: 自定义字体（通过`ResourcesCompat.getFont`加载）              | 应用自定义字体（需提前将字体文件放入`res/font`目录） |
 - **交互能力**：支持文本区域点击事件（点击后触发Toast或自定义逻辑）
 - **图片插入**：支持通过资源ID或Bitmap插入图片到文本中
 - **DSL链式调用**：通过简洁的Kotlin DSL语法构建富文本，代码可读性强
@@ -12,7 +34,7 @@
 ## 安装
 在项目的`build.gradle.kts`中添加依赖：
 ```kotlin
-  implementation(project(":library"))
+    implementation(project(":library"))
 ```
 
 ## 快速开始
