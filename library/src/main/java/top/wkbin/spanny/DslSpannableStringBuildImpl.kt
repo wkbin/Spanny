@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
+import androidx.core.content.ContextCompat
 
 class DslSpannableStringBuildImpl(val builder: SpannableStringBuilder) : DslSpannableStringBuilder {
 
@@ -18,7 +19,7 @@ class DslSpannableStringBuildImpl(val builder: SpannableStringBuilder) : DslSpan
         lastIndex += text.length
         val spanBuilder = DslSpanBuilderImpl()
         method?.let { spanBuilder.it() }
-        spanBuilder.build().let { (spans,clickableSpan)->
+        spanBuilder.build().let { (spans, clickableSpan) ->
             spans.forEach {
                 builder.setSpan(it, start, lastIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
@@ -29,15 +30,26 @@ class DslSpannableStringBuildImpl(val builder: SpannableStringBuilder) : DslSpan
     }
 
     @SuppressLint("InlinedApi")
-    override fun addImage(context: Context, imgId: Int) {
+    override fun addImage(context: Context, imgId: Int, width: Int, height: Int) {
         val start = builder.length
         builder.append("\uFFFC")
-        builder.setSpan(
-            ImageSpan(context, imgId, ImageSpan.ALIGN_CENTER),
-            start,
-            start + 1,
-            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-        )
+
+        val density = context.resources.displayMetrics.density
+        val widthPx = (width * density).toInt()
+        val heightPx = (height * density).toInt()
+
+        val drawable = ContextCompat.getDrawable(context, imgId)?.mutate()?.apply {
+            setBounds(0, 0, widthPx, heightPx)
+        }
+
+        drawable?.let {
+            builder.setSpan(
+                ImageSpan(it),
+                start,
+                start + 1,
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            )
+        }
         lastIndex = builder.length
     }
 

@@ -1,8 +1,14 @@
 package top.wkbin.spanny
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.graphics.Typeface
+import android.text.TextPaint
 import android.text.style.*
 import android.view.View
+import top.wkbin.spanny.DslSpanBuilder.VerticalAlignment
+import top.wkbin.spanny.span.GradientColorSpan
+import top.wkbin.spanny.span.ShadowSpan
 
 class DslSpanBuilderImpl : DslSpanBuilder {
     // 使用集合存储所有生成的 Span 对象
@@ -11,9 +17,22 @@ class DslSpanBuilderImpl : DslSpanBuilder {
 
     // 特殊处理点击事件，因为需要回调
     private var onClickAction: ((View) -> Unit)? = null
+    private var clickHighlightColor: Int? = null
 
     override fun textColor(color: Int) = apply {
         spans.add(ForegroundColorSpan(color))
+    }
+
+    override fun colorGradient(
+        vararg colors: Int,
+        orientation: GradientColorSpan.Orientation
+    ): DslSpanBuilder = apply {
+        if (colors.size < 2) {
+            // 至少需要2个颜色
+            spans.add(ForegroundColorSpan(colors.firstOrNull() ?: Color.BLACK))
+        } else {
+            spans.add(GradientColorSpan(colors, orientation))
+        }
     }
 
     override fun backgroundColor(color: Int) = apply {
@@ -46,8 +65,36 @@ class DslSpanBuilderImpl : DslSpanBuilder {
         spans.add(StrikethroughSpan())
     }
 
+    @SuppressLint("NewApi")
     override fun fontFamily(typeface: Typeface) = apply {
         spans.add(TypefaceSpan(typeface))
+    }
+
+    override fun relativeSize(ratio: Float) = apply {
+        spans.add(RelativeSizeSpan(ratio))
+    }
+
+    override fun shadow(radius: Float, dx: Float, dy: Float, color: Int) = apply {
+        spans.add(ShadowSpan(radius, dx, dy, color))
+    }
+
+    override fun clickHighlightColor(color: Int) = apply {
+        clickHighlightColor = color
+    }
+
+    override fun verticalAlignment(alignment: VerticalAlignment) = apply {
+        spans.add(when (alignment) {
+            is VerticalAlignment.Superscript -> SuperscriptSpan()
+            is VerticalAlignment.Subscript -> SubscriptSpan()
+            else -> object : MetricAffectingSpan() {
+                override fun updateDrawState(tp: TextPaint) {}
+                override fun updateMeasureState(tp: TextPaint) {}
+            }
+        })
+    }
+
+    override fun customSpan(span: Any) = apply {
+        spans.add(span)
     }
 
     private fun updateStyleSpan() {
@@ -61,6 +108,12 @@ class DslSpanBuilderImpl : DslSpanBuilder {
         val clickableSpan = onClickAction?.let { action ->
             object : ClickableSpan() {
                 override fun onClick(widget: View) = action(widget)
+
+                override fun updateDrawState(ds: TextPaint) {
+                    clickHighlightColor?.let { color ->
+                        ds.bgColor = color
+                    }
+                }
             }
         }
         return spans to clickableSpan

@@ -13,6 +13,6 @@ interface DslSpannableStringBuilder {
     /**
      * 增加一张图片
      */
-    fun addImage(context: Context, imgId: Int)
+    fun addImage(context: Context, imgId: Int, width: Int = 16, height: Int = 16)
     fun addImage(context: Context, bitmap: Bitmap)
 }
