@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":library"))
+    implementation(libs.spanny)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

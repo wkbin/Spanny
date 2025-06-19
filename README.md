@@ -38,7 +38,7 @@
 ## 安装
 在项目的`build.gradle.kts`中添加依赖：
 ```kotlin
-    implementation(project(":library"))
+implementation("io.github.wkbin:spanny:1.0.0")
 ```
 
 ## 快速开始
