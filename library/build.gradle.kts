@@ -55,7 +55,7 @@ mavenPublishing {
         developers {
             developer {
                 id = "wkbin/Spanny"
-                name = "xxxx"
+                name = "wkbin"
                 url = "https://github.wkbin.io"
             }
         }
